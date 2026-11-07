@@ -40,6 +40,17 @@ The `.tflite` file and the header contain exactly the same bytes: the serialized
 
 On the Arduino, the sketch loads the model from the header, allocates a tensor arena, reads x from the Serial Monitor, runs the interpreter and prints the result next to the true `tanf(x)`.
 
+## Running the .tflite model on the Raspberry Pi 5 (LiteRT)
+
+The `tan_model.tflite` file from the export step was also run directly on the Raspberry Pi 5, using the LiteRT framework (the `ai-edge-litert` Python package).
+
+1. Copy `tan_model.tflite` and the Python script to the Pi.
+2. Create a virtual environment and install the dependencies: `pip install ai-edge-litert numpy`.
+3. The script loads the model with LiteRT's `Interpreter`, allocates the tensors, feeds in x values from -1.2 to 1.2, and calls `invoke()`.
+4. It prints each model output next to the true `tan(x)` and computes the mean absolute error.
+
+LiteRT plays the same role on the Pi that TFLM plays on the Arduino: it is the runtime that executes the model. Only the model file differs (`.tflite` on the Pi, the equivalent C array in the `.h` file on the Arduino).
+
 ## Results (Raspberry Pi 5, LiteRT)
 
 | x | Model | tan(x) | Error |
@@ -60,3 +71,4 @@ On the Arduino, the sketch loads the model from the header, allocates a tensor a
 - Inputs outside [-1.2, 1.2] should be clamped, because the model was not trained there.
 - The Arduino sketch must match the model's data type. A float32 model uses `input->data.f[]`; an int8 model needs quantize and dequantize steps.
 - A stale header from an earlier int8 export caused wrong outputs on the GIGA, so always check which `.h` file is in the sketch folder.
+
