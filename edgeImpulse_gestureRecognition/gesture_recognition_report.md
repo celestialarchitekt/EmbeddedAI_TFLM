@@ -84,3 +84,14 @@ The Edge Impulse library compiled and ran on the GIGA R1. Four of the five sampl
 - It is not known whether every sample used came from the test set.
 - No live sensor data was used, because the GIGA R1 has no accelerometer.
 - The timing is reported in whole milliseconds, so "0 ms" means under 1 ms.
+
+
+## Architecture
+- Input layer receives a 1D vector , with 33 features. 
+- Dense layer 20 neurons, each neuron gets a weigheted sum of 33 features with a weight + bias.
+- 20 outputs from the previous layer get fed into each of the 10 neuron with a weight + bias.
+- Output has 4 classes: takes 10 output values and classifies them into 4 classes.
+
+
+
+
